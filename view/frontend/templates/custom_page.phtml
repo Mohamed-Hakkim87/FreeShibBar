@@ -1,0 +1,139 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$request = $objectManager->get('Magento\Framework\App\Request\Http');
+
+// Check if it's either PLP or PDP
+$isPLP = $request->getFullActionName() == 'catalog_category_view';
+$isPDP = $request->getFullActionName() == 'catalog_product_view';
+
+// Check if it's neither the cart nor the checkout page
+$notCartPage = $request->getFullActionName() != 'checkout_cart_index';
+$notCheckoutPage = $request->getFullActionName() != 'checkout_index_index';
+
+
+if ($notCartPage && $notCheckoutPage): 
+    $isEnabled = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')
+        ->getValue('general_configuration/configuration/enable', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+?>
+
+    <?php if ($isEnabled == 1): ?>
+        <?php
+        /** @var \Hikmadh\Freeshipbar\Block\Freeshipping $block */
+        $imageUrl = $block->getImageUrl();
+        $subtotal = $block->getOrderSubtotal();
+        $freeshiptotal = $block->getFreeShippingSubtotal();
+        $percentage = ($subtotal / $freeshiptotal) * 100;
+        ?>
+
+        <svg width="200" height="200" id="svg-container">
+            <!-- Inner circle as progress -->
+            <circle r="50" cx="70" cy="70" class="progress"></circle>
+
+            <!-- Center the image inside the circle -->
+            <image xlink:href="<?= $imageUrl ?>" class="freeshipbar" alt="Custom Image" height="60px" width="60px" x="42" y="95" />
+        </svg>
+        <div id="alert-container"></div>
+
+        <style type="text/css">
+            .freeshipbar {
+                border-radius: 50%;
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+            #svg-container {
+                position: fixed;
+                bottom: 0;
+                left: 10%;
+                transform: translateX(-50%);
+                z-index: 9999;
+            }
+
+            .progress {
+                stroke-width: 10;
+                stroke-linecap: round;
+                fill: none;
+                transform: rotate(270deg);
+                transform-origin: center;
+            }
+
+            #alert-container {
+                position: fixed;
+                display: none;
+                background-color: #ffffff;
+                border: 1px solid #cccccc;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                z-index: 10000;
+                white-space: nowrap;
+            }
+        </style>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let progressCircle = document.querySelector(".progress");
+                let radius = progressCircle.r.baseVal.value;
+                let circumference = radius * 2 * Math.PI;
+                progressCircle.style.strokeDasharray = circumference;
+
+                var phpProgressValue = <?= min(max($percentage, 0), 100); ?>;
+                setProgress(phpProgressValue);
+
+                let freeshipbarImage = document.querySelector(".freeshipbar");
+                freeshipbarImage.addEventListener("click", displayOutstandingAmount);
+
+                function setProgress(percent) {
+                    percent = Math.min(Math.max(percent, 0), 100);
+                    let hue = ((percent / 100) * 120).toString(10);
+                    let color = "hsl(" + hue + ", 100%, 50%)";
+
+                    progressCircle.style.stroke = color;
+                    progressCircle.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+                }
+
+                function displayOutstandingAmount() {
+                    let outstandingAmount = <?= max(0, $freeshiptotal - $subtotal); ?>;
+                    let alertContainer = document.getElementById("alert-container");
+
+                    if (outstandingAmount > 0) {
+                        alertContainer.innerHTML = "Only $" + outstandingAmount.toFixed(2) + " left for free shipping.";
+                    } else {
+                        alertContainer.innerHTML = "Congratulations! Your order will be delivered for Free.";
+                    }
+
+                    let rect = freeshipbarImage.getBoundingClientRect();
+                    alertContainer.style.left = rect.right + 20 + "px";
+                    alertContainer.style.top = rect.top + "px";
+
+                    alertContainer.style.display = "block";
+
+                    setTimeout(function() {
+                        alertContainer.style.display = "none";
+                    }, 5000);
+                }
+            });
+        </script>
+        <script> 
+        $(document).ajaxComplete(function(event, xhr, settings) {
+   if (settings.url.indexOf('checkout/sidebar/updateItemQty') !== -1) {
+       // your stuff here...
+       $.ajax({
+    url: '&lt;?php echo $block->getUrl('checkout/sidebar/updateItemQty');?>',
+    type: 'POST',
+    showLoader: true,
+    success: function (res) {
+        if (res.messages) {
+            $('[data-placeholder="messages"]').html(res.messages);
+        }
+
+        if (res.minicart) {
+            $('[data-block="minicart"]').replaceWith(res.minicart);
+            $('[data-block="minicart"]').trigger('contentUpdated');
+        }
+    }
+});
+});
+</script>
+    <?php endif; ?>
+<?php endif; ?>

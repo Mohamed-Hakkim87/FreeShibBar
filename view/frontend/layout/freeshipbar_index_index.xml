@@ -1,0 +1,10 @@
+<head>
+    <script>
+        var config = {
+            'Hikmadh_Freeshipbar/js/minicart-custom': {
+                updateUrl: '<?php echo $block->getUrl("customer/section/load/?sections"); ?>',
+                deleteUrl: '<?php echo $block->getUrl("checkout/sidebar/updateItemQty/"); ?>'
+            }
+        };
+    </script>
+</head>

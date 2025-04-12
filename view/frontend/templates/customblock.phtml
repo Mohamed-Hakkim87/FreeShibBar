@@ -1,0 +1,24 @@
+
+<?php
+
+if($block->getFreeShippingSubtotal() !== null && $block->getFreeShippingSubtotal() != 0 && $block->isFreeShippingEnabled() == 1){
+
+echo '<p style="color: green;">';
+    
+$subtotal = $block->getOrderSubtotal();
+$freeshiptotal = $block->getFreeShippingSubtotal();
+
+$balance = $freeshiptotal - $subtotal ;
+    
+echo "<progress id='file' value='$subtotal' max='$freeshiptotal'></progress>";
+    echo "</br>";
+
+    if ($block->getFreeShippingSubtotal() <= $block->getOrderSubtotal()) {
+        echo "<b>Congratulations! You got free shipping</b>";
+    } else {
+        echo '<b style="color: red;">Free shipping when you spend an additional $' . $balance . '</b>';
+    }
+echo '</p>';
+
+}
+?>

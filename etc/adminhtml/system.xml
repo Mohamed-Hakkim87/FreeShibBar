@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="general_configuration" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Freeshipbar</label>
+            <tab>general</tab>
+            <resource>Hikmadh_Freeshipbar::config_section</resource>
+            <group id="configuration" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="first_message" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>The first Message</label>
+                    <source_model>Hikmadh\Freeshipbar\Model\Config\Source\Custom</source_model>
+                </field>
+                <field id="progress_message" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Progress Message</label>
+                    <source_model>Hikmadh\Freeshipbar\Model\Config\Source\Custom</source_model>
+                </field>
+                <field id="success_message" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Success Message</label>
+                    <source_model>Hikmadh\Freeshipbar\Model\Config\Source\Custom</source_model>
+                </field>
+                <field id="tool_tip_message" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Tool-Tip Message</label>
+                    <source_model>Hikmadh\Freeshipbar\Model\Config\Source\Custom</source_model>
+                </field>
+                <field id="message_show" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Message Show</label>
+                    <source_model>Hikmadh\Freeshipbar\Model\Config\Source\Custom</source_model>
+                </field>
+                <field id="circle_side" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Circle Side</label>
+                    <source_model>Hikmadh\Freeshipbar\Model\Config\Source\Custom</source_model>
+                </field>
+                <field id="success_color" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Success Color</label>
+                    <frontend_model>Hikmadh\Freeshipbar\Block\Color</frontend_model>
+                </field>
+                <field id="image_upload" translate="label" type="image" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Upload Image</label>
+                    <backend_model>Hikmadh\Freeshipbar\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">hikmadh/freeshipbar</base_url>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
+
+
+  
