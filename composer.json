@@ -1,6 +1,6 @@
 {
     "name": "hikmadh/freeshipbar",
-    "description": "module for track freeshipping",
+    "description": "Module for track freeshipping",
     "type": "magento2-module",
     "keywords": [
         "php",
